@@ -2,7 +2,15 @@ from collections import UserDict
 
 
 class AddressBook(UserDict):
-    pass
+    def __init__(self): 
+        self.data = {}
+
+    def add_record(self, name):
+        self.record = Record(name)
+        self.data[self.record.name.value] = self.record
+        result = f'Record {self.record.name.value} added to address book'
+        print(result)
+        return result
 
 
 class Record:
@@ -43,7 +51,6 @@ class Record:
                     break
                 else:
                     result = f'Number {value} is not in the phone list of {self.name.value}'
-
         else:
             result = f'Contact {self.name.value} does not have any phone number'
         print(result)
