@@ -35,7 +35,6 @@ class Record:
                     break
                 else:
                     result = f'Number {value} is not in the phone list of {self.name.value}'
-
         else:
             result = f'Contact {self.name.value} does not have any phone number'
         print(result)
