@@ -5,8 +5,8 @@ class AddressBook(UserDict):
     def __init__(self): 
         self.data = {}
 
-    def add_record(self, name):
-        self.record = Record(name)
+    def add_record(self, record):
+        self.record = record
         self.data[self.record.name.value] = self.record
         result = f'Record {self.record.name.value} added to address book'
         print(result)
@@ -14,50 +14,48 @@ class AddressBook(UserDict):
 
 
 class Record:
-    def __init__(self, name): 
-        self.name = Name(name)
-        self.phones = []
+    def __init__(self, name, phone=None): 
+        self.name = name
+        if phone != None:
+            self.phones = []
+            self.phones.append(phone)
 
 
-    def add_phone(self, value):
-        self.phones.append(Phone(value))
-        result = f'Number {value} added to phone list of {self.name.value}'
+    def add_phone(self, phone):
+        self.phones.append(phone)
+        result = f'Number {phone.value} added to phone list of {self.name.value}'
         print(result)
         return result
 
 
-    def remove_phone(self, value):
+    def remove_phone(self, phone):
         if len(self.phones) > 0:
             for id, obj in enumerate(self.phones):
-                if obj.value == value:
+                if obj == phone:
                     self.phones.pop(id)
-                    result = f'Number {value} remuved from phone list of {self.name.value}'
+                    result = f'Number {phone.value} remuved from phone list of {self.name.value}'
                     break
                 else:
-                    result = f'Number {value} is not in the phone list of {self.name.value}'
+                    result = f'Number {phone.value} is not in the phone list of {self.name.value}'
         else:
             result = f'Contact {self.name.value} does not have any phone number'
         print(result)
         return result
     
 
-    def change_phone(self, value, new_value):
+    def change_phone(self, phone, new_phone):
         if len(self.phones) > 0:
             for id, obj in enumerate(self.phones):
-                if obj.value == value:
-                    obj.value = new_value
-                    result = f'Number {value} changed to {new_value} in phone list of {self.name.value}'
+                if obj == phone:
+                    obj = new_phone
+                    result = f'Number {phone.value} changed to {new_phone.value} in phone list of {self.name.value}'
                     break
                 else:
-                    result = f'Number {value} is not in the phone list of {self.name.value}'
+                    result = f'Number {phone.value} is not in the phone list of {self.name.value}'
         else:
             result = f'Contact {self.name.value} does not have any phone number'
         print(result)
         return result
-
-
-
-    
 
 
 class Field:
