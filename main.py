@@ -13,7 +13,6 @@ good bye, close, exit : print \"Good bye!\" and exit
 """
 
 
-phone_book = {}
 address_book = AddressBook()
 
 def is_contact_exist(name):
@@ -54,7 +53,7 @@ def input_error(func):
                 if is_contact_exist(name):
                     result = func(param_list)
                 else:
-                    result = f"Contact \"{name}\" does not exist in the phone book\n"
+                    result = f"Contact \"{name}\" does not exist in the address book\n"
             else:
                 result = f"""Command \"{func.__name__}\" reqired 1 argument: name.\nFor example: {func.__name__} [name]\n\nTRY AGAIN!!!"""
 
@@ -62,9 +61,9 @@ def input_error(func):
             if len(param_list) > 0:
                 if len(param_list) == 1:
                     name = param_list[0]
-                    is_exist = is_contact_exist(name)
-                    if is_exist:
-                        result = f"Contact \"{name}\" already exists in address book"
+                    is_con_exist = is_contact_exist(name)
+                    if is_con_exist:
+                        result = f"Contact \"{name}\" already exists in address book\n"
                     else:
                         result = func(param_list)
                 elif len(param_list) > 1:
@@ -78,17 +77,26 @@ def input_error(func):
             else:
                 result = f"""Command \"{func.__name__}\" reqired 1 or 2 arguments: name and phone.\nFor example: {func.__name__} [name] - To add a new contact without phones\nFor example: {func.__name__} [name] [phone] - To add a new contact with phones, or add new phone to contact\n\nTRY AGAIN!!!"""
         
-        else:
-            if len(param_list) > 1:
+        elif func.__name__ == "change":
+            if len(param_list) > 2:
                 name = param_list[0]
-                phone = param_list[1]
-                match = re.fullmatch(r'\+\d{12}', phone)
-                if match:
-                    result = func(param_list)
+                is_con_exist = is_contact_exist(name)
+                if is_con_exist:
+                    old_phone = param_list[1]
+                    is_ph_exist = is_phone_exist(name, old_phone)
+                    if is_ph_exist:
+                        new_phone = param_list[2]
+                        match = re.fullmatch(r'\+\d{12}', new_phone)
+                        if match:
+                            result = func(param_list)
+                        else:
+                            result = f"""Entered value \"{new_phone}\" is not correct.\nPhone must start with \"+\" and must have 12 digits.\nFor example: \"+380681235566\"\n\nTRY AGAIN!!!"""
+                    else:
+                        result = f"Phone \"{old_phone}\" does not exist in the phone list of contact \"{name}\"\n"  
                 else:
-                    result = f"""Entered value \"{phone}\" is not correct.\nPhone must start with \"+\" and must have 12 digits.\nFor example: \"+380681235566\"\n\nTRY AGAIN!!!"""
+                    result = f"Contact \"{name}\" does not exist in the address book\n"
             else:
-                result = f"""Command \"{func.__name__}\" reqired 2 arguments: name and phone.\nFor example: {func.__name__} [name] [phone]\n\nTRY AGAIN!!!"""
+                result = f"""Command \"{func.__name__}\" reqired 3 arguments: name, phone and new_phone.\nFor example: {func.__name__} [name] [phone] [new_phone]\n\nTRY AGAIN!!!"""
         
         return result
     return inner
@@ -100,14 +108,14 @@ def add(param_list):
         name = Name(param_list[0])
         phone = None
         address_book.add_record(Record(name, phone))
-        result = f"Added new contact \"{name.value}\" without phones to phone book\n"
+        result = f"Added new contact \"{name.value}\" without phones to address book\n"
     elif len(param_list) > 1:
         name = Name(param_list[0])
         phone = Phone(param_list[1])
         is_cont_exist = is_contact_exist(name.value)
         if not is_cont_exist:
             address_book.add_record(Record(name, phone))
-            result = f"Added new contact \"{name.value}\" with phone \"{phone.value}\" to phone book\n"
+            result = f"Added new contact \"{name.value}\" with phone \"{phone.value}\" to address book\n"
         else:
             is_ph_exist = is_phone_exist(name.value, phone.value)
             if not is_ph_exist:
@@ -122,14 +130,20 @@ def add(param_list):
 
 @input_error
 def change(param_list):
+    
 
-    name = param_list[0]
-    if name in phone_book:
-        phone = param_list[1]
-        phone_book[name] = str(phone)
-        result = f"Changed phone for \"{name}\" to new phone \"{phone}\" in the phone book\n"
-    else:
-        result = f"Contact \"{name}\" does not exist in the phone book\n"
+    name_str = param_list[0]
+    phone_str = param_list[1]
+    new_phone_str = param_list[2]
+    new_phone_obj = Phone(new_phone_str)
+    record = address_book[name_str]
+    phone_list = record.phones
+    for obj in phone_list:
+        if obj.value == phone_str:
+            phone_obj = obj
+            result = record.change_phone(phone_obj, new_phone_obj)
+            break
+    
     return result
 
 

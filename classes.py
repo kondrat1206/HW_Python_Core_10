@@ -9,7 +9,7 @@ class AddressBook(UserDict):
         self.record = record
         self.data[self.record.name.value] = self.record
         result = f'Record {self.record.name.value} added to address book'
-        print(result)
+        
         return result
 
 
@@ -24,7 +24,7 @@ class Record:
     def add_phone(self, phone):
         self.phones.append(phone)
         result = f'Number {phone.value} added to phone list of {self.name.value}'
-        print(result)
+
         return result
 
 
@@ -39,22 +39,23 @@ class Record:
                     result = f'Number {phone.value} is not in the phone list of {self.name.value}'
         else:
             result = f'Contact {self.name.value} does not have any phone number'
-        print(result)
+
         return result
     
 
-    def change_phone(self, phone, new_phone):
+    def change_phone(self, old_phone, new_phone):
+        old_num = old_phone.value
+        new_num = new_phone.value
         if len(self.phones) > 0:
-            for id, obj in enumerate(self.phones):
-                if obj == phone:
-                    obj = new_phone
-                    result = f'Number {phone.value} changed to {new_phone.value} in phone list of {self.name.value}'
+            for obj in self.phones:
+                if obj.value == old_phone.value:
+                    obj.value = new_phone.value
+                    result = f'Number {old_num} changed to {new_num} in phone list of {self.name.value}\n'
                     break
                 else:
-                    result = f'Number {phone.value} is not in the phone list of {self.name.value}'
+                    result = f'Number {old_num} is not in the phone list of {self.name.value}\n'
         else:
-            result = f'Contact {self.name.value} does not have any phone number'
-        print(result)
+            result = f'Contact {self.name.value} does not have any phone number\n'
         return result
 
 
