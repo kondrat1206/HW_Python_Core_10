@@ -5,10 +5,10 @@ import re
 help = """
 Available commands:
 hello : print \"How can I help you?\"
-add [name] [phone] : Add a new record to contact list
-change [name] [phone] : Change phone num in contact list
-phone [name] : Show phone of user
-show all : Show contact list
+add [name] [phone] : Add a new record to address book or new phone to contact phone list
+change [name] [old_phone] [new_phone] : Change phone num for contact in address book
+phone [name] : Show phone list of contact
+show all : Show address book
 good bye, close, exit : print \"Good bye!\" and exit
 """
 
@@ -21,11 +21,11 @@ def is_contact_exist(name):
     for key in address_book.keys():
         contact_list.append(key)
     if name in contact_list:
-        is_contact_exist = True
+        result = True
     else:
-        is_contact_exist = False
+        result = False
     
-    return is_contact_exist
+    return result
 
 
 def is_phone_exist(name, phone):
@@ -34,11 +34,11 @@ def is_phone_exist(name, phone):
     for number in phone_list:
         phone_values.append(number.value)
     if phone in phone_values:
-        is_phone_exist = True
+        result = True
     else:
-        is_phone_exist = False
+        result = False
     
-    return is_phone_exist
+    return result
 
 
 
@@ -51,7 +51,7 @@ def input_error(func):
         if func.__name__ == "phone":
             if len(param_list) > 0:
                 name = param_list[0]
-                if name in phone_book:
+                if is_contact_exist(name):
                     result = func(param_list)
                 else:
                     result = f"Contact \"{name}\" does not exist in the phone book\n"
@@ -137,8 +137,11 @@ def change(param_list):
 def phone(param_list):
 
     name = param_list[0]
-    phone = phone_book[name]
-    result = f"Phone of contact \"{name}\" is \"{phone}\"\n"
+    phone_list = address_book[name].phones
+    value_list = []
+    for phone_obj in phone_list:
+        value_list.append(phone_obj.value)
+    result = f"Phone list of contact \"{name}\" is \"{value_list}\"\n"
     return result
 
 
