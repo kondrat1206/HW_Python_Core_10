@@ -16,8 +16,8 @@ class AddressBook(UserDict):
 class Record:
     def __init__(self, name, phone=None): 
         self.name = name
+        self.phones = []
         if phone != None:
-            self.phones = []
             self.phones.append(phone)
 
 
