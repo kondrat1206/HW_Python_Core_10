@@ -16,6 +16,33 @@ good bye, close, exit : print \"Good bye!\" and exit
 phone_book = {}
 address_book = AddressBook()
 
+def is_contact_exist(name):
+    contact_list = []
+    for key in address_book.keys():
+        contact_list.append(key)
+    if name in contact_list:
+        is_contact_exist = True
+    else:
+        is_contact_exist = False
+    
+    return is_contact_exist
+
+
+def is_phone_exist(name, phone):
+    phone_list = address_book[name].phones
+    phone_values = []
+    for number in phone_list:
+        phone_values.append(number.value)
+    if phone in phone_values:
+        is_phone_exist = True
+    else:
+        is_phone_exist = False
+    
+    return is_phone_exist
+
+
+
+
 def input_error(func):
 
     @functools.wraps(func)
@@ -32,13 +59,11 @@ def input_error(func):
                 result = f"""Command \"{func.__name__}\" reqired 1 argument: name.\nFor example: {func.__name__} [name]\n\nTRY AGAIN!!!"""
 
         elif func.__name__ == "add":
-            contact_list = []
-            for key in address_book.keys():
-                contact_list.append(key)
             if len(param_list) > 0:
                 if len(param_list) == 1:
                     name = param_list[0]
-                    if name in contact_list:
+                    is_exist = is_contact_exist(name)
+                    if is_exist:
                         result = f"Contact \"{name}\" already exists in address book"
                     else:
                         result = func(param_list)
@@ -79,8 +104,18 @@ def add(param_list):
     elif len(param_list) > 1:
         name = Name(param_list[0])
         phone = Phone(param_list[1])
-        address_book.add_record(Record(name, phone))
-        result = f"Added new contact \"{name.value}\" with phone \"{phone.value}\" to phone book\n"
+        is_cont_exist = is_contact_exist(name.value)
+        if not is_cont_exist:
+            address_book.add_record(Record(name, phone))
+            result = f"Added new contact \"{name.value}\" with phone \"{phone.value}\" to phone book\n"
+        else:
+            is_ph_exist = is_phone_exist(name.value, phone.value)
+            if not is_ph_exist:
+                address_book[name.value].add_phone(phone)
+                result = f"Added new phone \"{phone.value}\" to contact \"{name.value}\"\n"
+            else:
+                result = f"Phone \"{phone.value}\" already exists into the contact \"{name.value}\"\n"
+
     
     return result
 
