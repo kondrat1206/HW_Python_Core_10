@@ -2,10 +2,12 @@ from collections import UserDict
 
 
 class AddressBook(UserDict):
+    
     def __init__(self): 
         self.data = {}
 
     def add_record(self, record):
+
         self.record = record
         self.data[self.record.name.value] = self.record
         result = f'Record {self.record.name.value} added to address book'
@@ -14,6 +16,7 @@ class AddressBook(UserDict):
 
 
 class Record:
+
     def __init__(self, name, phone=None): 
         self.name = name
         self.phones = []
@@ -22,6 +25,7 @@ class Record:
 
 
     def add_phone(self, phone):
+
         self.phones.append(phone)
         result = f'Number {phone.value} added to phone list of {self.name.value}'
 
@@ -29,33 +33,24 @@ class Record:
 
 
     def remove_phone(self, phone):
-        if len(self.phones) > 0:
-            for id, obj in enumerate(self.phones):
-                if obj == phone:
-                    self.phones.pop(id)
-                    result = f'Number {phone.value} remuved from phone list of {self.name.value}'
-                    break
-                else:
-                    result = f'Number {phone.value} is not in the phone list of {self.name.value}'
-        else:
-            result = f'Contact {self.name.value} does not have any phone number'
-
+        
+        phone_num = phone.value
+        for id, obj in enumerate(self.phones):
+            if obj == phone:
+                self.phones.pop(id)
+                result = f'Number {phone_num} remuved from phone list of {self.name.value}'
+                break
+                
         return result
     
 
     def change_phone(self, old_phone, new_phone):
+
         old_num = old_phone.value
         new_num = new_phone.value
-        if len(self.phones) > 0:
-            for obj in self.phones:
-                if obj.value == old_phone.value:
-                    obj.value = new_phone.value
-                    result = f'Number {old_num} changed to {new_num} in phone list of {self.name.value}\n'
-                    break
-                else:
-                    result = f'Number {old_num} is not in the phone list of {self.name.value}\n'
-        else:
-            result = f'Contact {self.name.value} does not have any phone number\n'
+        old_phone.value = new_phone.value
+        result = f'Number {old_num} changed to {new_num} in phone list of {self.name.value}\n'
+                   
         return result
 
 
