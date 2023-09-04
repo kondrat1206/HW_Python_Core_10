@@ -72,8 +72,8 @@ def add(param_list):
 @input_error
 def change(param_list):
 
+    record = Record(Name(param_list[0]))
     old_phone_obj = Phone(param_list[1])
-    record = Record(Name(param_list[0]), old_phone_obj)
     new_phone_obj = Phone(param_list[2])
     if address_book.is_contact_exist(record):
         result = address_book[param_list[0]].change_phone(old_phone_obj, new_phone_obj)
