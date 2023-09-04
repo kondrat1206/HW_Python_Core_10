@@ -12,7 +12,6 @@ show all : Show address book
 good bye, close, exit : print \"Good bye!\" and exit
 """
 
-
 address_book = AddressBook()
 
 
@@ -26,7 +25,6 @@ def input_error(func):
                 result = func(param_list)
             else:
                 result = f"""Command \"{func.__name__}\" reqired 1 argument: name.\nFor example: {func.__name__} [name]\n\nTRY AGAIN!!!"""
-
         elif func.__name__ == "add":
             if len(param_list) > 0:
                 if len(param_list) == 1:
@@ -41,7 +39,6 @@ def input_error(func):
                         result = f"""Entered value \"{phone}\" is not correct.\nPhone must start with \"+\" and must have 12 digits.\nFor example: \"+380681235566\"\n\nTRY AGAIN!!!"""
             else:
                 result = f"""Command \"{func.__name__}\" reqired 1 or 2 arguments: name and phone.\nFor example: {func.__name__} [name] - To add a new contact without phones\nFor example: {func.__name__} [name] [phone] - To add a new contact with phones, or add new phone to contact\n\nTRY AGAIN!!!"""
-        
         elif func.__name__ == "change":
             if len(param_list) > 2:
                 name = param_list[0]
@@ -60,6 +57,7 @@ def input_error(func):
 
 @input_error
 def add(param_list):
+
     if len(param_list) == 1:
         name = Name(param_list[0])
         phone = None
@@ -122,8 +120,8 @@ def show_all(param_list):
         phone_values = []
         for phone in phones:
             phone_values.append(phone.value)
-        
         result += f"Name: \"{name}\", Phones: {phone_values}\n"
+
     return result
 
 
@@ -156,6 +154,7 @@ def parser(string: str):
 
 
 def handler(command):
+
     return commands[command]
 
 
@@ -167,7 +166,6 @@ def main():
         if not command:
             print(f"YOU ENTERED A WRONG COMMAND!!!\n{help}\nTRY AGAIN!!!")
             continue
-
         result = handler(command)(param_list)
         if result == 'exit':
             print("Good bye!")
@@ -178,4 +176,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
